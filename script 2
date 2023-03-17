@@ -1,3 +1,6 @@
+# Set the path to the directory you want to clean up
+$path = "C:\Path\To\Directory"
+
 # Get the current date and time
 $now = Get-Date
 
@@ -29,3 +32,20 @@ Get-Content -Path $logFile.FullName
 
 # Remove the temporary log file
 Remove-Item -Path $logFile.FullName
+
+===========================================================
+
+# Set the directory path and folder name pattern
+$directoryPath = "C:\example\directory"
+$folderNamePattern = "*example*"
+
+# Get the current date and subtract 7 days to calculate the date limit
+$limit = (Get-Date).AddDays(-7)
+
+# Get all folders in the specified directory that match the pattern and are older than the limit
+$foldersToDelete = Get-ChildItem -Path $directoryPath -Filter $folderNamePattern -Directory | Where-Object {$_.LastWriteTime -lt $limit}
+
+# Loop through the folders and delete them
+foreach ($folder in $foldersToDelete) {
+    Remove-Item $folder.FullName -Recurse -Force
+}
