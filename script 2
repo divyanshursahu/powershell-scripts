@@ -1,0 +1,31 @@
+# Get the current date and time
+$now = Get-Date
+
+# Set the time span for how old files and folders should be before they are deleted
+$days = 7
+$timeSpan = New-TimeSpan -Days $days
+
+# Get a list of all the files and folders in the specified directory that are older than the specified time span
+$oldFiles = Get-ChildItem -Path $path -Recurse | Where-Object { $_.LastWriteTime -lt ($now - $timeSpan) }
+
+# Create a temporary text file to log the names of the deleted files and folders
+$logFile = New-TemporaryFile
+
+# Loop through the list of old files and delete them
+foreach ($file in $oldFiles) {
+    if ($file.PSIsContainer) {
+        Remove-Item -Path $file.FullName -Recurse -Force
+    }
+    else {
+        Remove-Item -Path $file.FullName -Force
+    }
+    
+    # Write the name of the deleted file or folder to the log file
+    Add-Content -Path $logFile.FullName -Value $file.FullName
+}
+
+# Display the names of the deleted files and folders in the console
+Get-Content -Path $logFile.FullName
+
+# Remove the temporary log file
+Remove-Item -Path $logFile.FullName
