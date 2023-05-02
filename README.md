@@ -1,1 +1,10 @@
-# powershell-scripts
+# 🔐 Security Primitives
+
+gsdmkdmkkfsmgns
+
+
+
+
+
+sknksgns
+
